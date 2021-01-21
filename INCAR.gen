@@ -1,0 +1,100 @@
+
+SYSTEM = Generic Input
+
+Initialisation:
+   NWRITE    =  2          (0- minimal output, 1 - more, 2 - standard)
+   ISTART    =  1          (0- random wavefunction, 1 - use existing wavefunction if WAVECAR present) 
+   INIWAV    =  1          (Start from a random wavefunction - if there is no WAVECAR )
+!   ICHARG    =  11         (Read CHGCAR and perfom non-selfconsistent: GGA/LDA band structures)
+!   NBANDS    =  56         (No. bands)
+!   NELECT    =  500        (No. electrons to set up charged cells)
+
+Optimisation / Parallelisation:
+!   LPLANE    = .TRUE.       (Real space distribution useful for supercells)
+!   KPAR      =  4           (Distribution of k-points - before NPAR)
+!   NPAR      =  4           (number of partitions - usually best as number of nodes - or NUMA partitions - usually the same except Archer!)
+    NCORE    =  8           (No. of cores working together on an orbital) 
+!   LSCALU    =  .TRUE.      (use serial LU decomp rather than ScaLapack)
+
+General electronic Relaxation:
+   PREC      =  Normal     (normal precision, Accurate)
+   ENMAX     =  500.00 eV  (Plane-wave cutoff)
+   NELM      =  50         (maximum number of steps in SCF) 
+   NELMIN    =  5          (minimum number of steps in SCF) 
+   EDIFF     =  1E-06      (SCF convergence criteria)
+   ISPIN     =  1          (spin restricted DFT, 2-spin unrestricted)
+   LASPH     =  .TRUE.     (Non-spherical elements in paw)
+!   LREAL     =  Auto       (Real Space Projection operators: automatic)
+!   ROPT      =  
+!   ADDGRID   =  .TRUE.     (8x grid for augmentation charges - less noise in forces)
+
+Ionic Relaxation:
+   EDIFFG    =  -0.01      (Ionic convergence; eV/A)
+   NSW       =  00         (Max ionic steps)
+   IBRION    =  1          (Algorithm: 0-MD; 1-Quasi-New; 2-CG, 5/6-finite vibs, 7-8-DFPT vibs))
+   ISIF      =  3          (Stress/relaxation: 0-ions no stress, 2-ions, 3-Ions/vol/shape, 4-ions/shape)
+   ISYM      =  2          (Symmetry: 0-none; 1=US-PP 2=PAW DFT; 3= hybrid - not charge density)
+   NBLOCK    =  1          (write frame to XDATCAR /scale velocities every X steps )
+   KBLOCK    =  40         (Update PCDAT and DOSCAR every X*NBLOCK steps) 
+   ISMEAR    =  0          (0-gaussian smearing,  1-5- Methfessel-Paxton for metals:-5-tetrahdron method))
+   SIGMA     =  0.01       (Smearing value in eV; metals:0.2)
+!   POTIM     =  0.2       (timestep for MD, or stepsize for optimisation) 
+
+
+DFT calculation
+   GGA       =  PE         (exchange-correlation - PE-PBE-default, PS-PBEsol, 91-PW91, AM-AM05)
+   ALGO      =  FAST       (SCF minimisation algorithm- Normal=38, Fast=38/48, VeryFast=48, ALL-Hybrid, Damped-Hyrbrid)
+!   TIME      =  0.30       (Timestep for ALGO ALL/DAMPED)
+ 
+Unrestricted / magnetic Calculations:
+!   MAGMOM    =  5*1.0      (starting magnetic momoment on each ion)
+!   NUPDOWN   =  5          (fixed spin)
+!   LSORBIT   =  .TRUE.     (Spin-orbit coupling)
+
+DFT+U Calculations:
+!   LDAU      = .TRUE.      (Activate DFT+U)
+!   LDATYPE   = 2           (2-Dudarev; only U-J matters, 1-Liechtenstein)
+!   LDAUL     = 3 1         (Orbitals for each species, -1- none, 0-s, 1-p, 2-d, 3-f)
+!   LDAUU     = 5.0 5.5     (U for each species)
+!   LDAUJ     = 0.0 0.0     (J for each species)
+!   LMAXMIX   =  6          (Mixing cut-off; 4-d, 6-f)
+
+Hybrid-DFT Calculations:
+!   LHFCALC   =  .TRUE.     (Hatree-Fock)
+!   PRECFOCK  =  FAST       (HF Exchange FFT grid, Fast, Normal, Accurate) 
+!   NKRED     =  2          (reduce even k-point grids only)
+!   ALGO      =  ALL        (SCF minimisation algorithm- Normal=38, Fast=38/48, VeryFast=48, ALL-Hybrid, Damped-Hybrid)
+!   TIME      =  0.30       ((Timestep for ALGO ALL/DAMPED))
+!   LMAXFOCK  =  4          (spherical terms of augemntation charge in HF: 4d,6f)
+!   HFSCREEN  =  0.207      (damping parameter for screened exchange, 0.207 - HSE06)
+!   AEXX      =  0.25       (Fraction of HF exchange - 0.25 - 25% as used in PBE0 / HSE06)
+
+Molecular Dynamics(not enhanced - needs updating):
+!   POTIM     =  5          (Timestep in fs)
+!   TEBEG     =  100        (Start temp K)
+!   TEEND     =  100        (End temp K)
+!   SMASS     =  0          (0-NVT, -1-velocity scaling every NBLOCK, -3-NVE)
+
+Miscellaneous:
+!   ICORELEVEL = 1          (Print core levels)
+   LORBIT     = 11         (PAW radii for projected DOS)
+   NEDOS      = 2000 (DOSCAR points)
+!   RWIGS      = 1.5 1.5    (Radii for each atomic species if not using PAW radii)
+!   LOPTICS    = .TRUE.     (Output OPTIC file)
+!   LVTOT      = .TRUE.     (electrostatic potential)
+!   LVHAR      = .TRUE.     (ionic and hartree potential - used defect corrections) 
+!   LELF       = .TRUE.     (localisation function)
+!   LWAVE      = .FALSE.    (do not print WAVECAR at end)
+!   LCHGAR     = .FALSE.    (do not print CHG/CHGCAR at end)
+
+Decomposed Charge Density:
+!  LPARD       = .TRUE.     (Generate PARCHG)
+!  EINT        = -15 0      (Energy range)
+!  NBMOD       = -3         (With reference to Ef)
+!  KPUSE       = 1          (Over k-points)
+!  IBAND       = 20         (Over bands)
+
+OCCUPATION MATRIX CONTROL (GWW)
+!  OCCEXT      =  .TRUE.    (read occupation matrix from externals file - OCCMATRIX) 
+!  OCCDIR1     =   1  5  2  1  5  5  1  1.0   ( one atom, atom 5, d orbital, 1 element, element 5, 5, spin up, occ=1.0 ) 
+!            no of atoms, [ atom number, orbital type (0,1,2,3), number of elements, ( element 1, element 2, spin-1/2, occupation) * number of elements ] * number of atoms
